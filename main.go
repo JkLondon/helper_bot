@@ -8,6 +8,7 @@ import (
 
 	tgbotapi "github.com/go-telegram-bot-api/telegram-bot-api/v5"
 	"github.com/joho/godotenv"
+	"github.com/shopspring/decimal"
 )
 
 func init() {
@@ -21,7 +22,8 @@ func main() {
 		apiKey        = os.Getenv("WEATHER_API_KEY")
 		telegramToken = os.Getenv("TELEGRAM_APITOKEN")
 	)
-
+	MakkaString, err := decimal.NewFromString(os.Getenv("MAKKA"))
+	MakkaID := MakkaString.IntPart()
 	bot, err := tgbotapi.NewBotAPI(telegramToken)
 	if err != nil {
 		panic(err)
@@ -66,6 +68,13 @@ func main() {
 				"/weather - информация о погоде\n" +
 				"/help - информация о боте"
 			msg.ReplyToMessageID = update.Message.MessageID
+		case "makka":
+			msg.Text = "Макка — девушка моего хозяина, он просил ей передать, что любит её"
+			if update.Message.From.ID == MakkaID {
+				msg.Text += "\nОй, это же вы, Макка!!! Хозяин Илюша просит вам передать, что обожает вас!!❤️"
+			}
+			msg.ReplyToMessageID = update.Message.MessageID
+
 		default:
 			msg.Text = "Я вас не понимаю"
 			msg.ReplyToMessageID = update.Message.MessageID
