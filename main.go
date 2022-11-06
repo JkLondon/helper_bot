@@ -3,7 +3,6 @@ package main
 import (
 	"log"
 	"os"
-	"strings"
 	"weatherEveryDay/httpClient"
 	"weatherEveryDay/templates"
 
@@ -41,20 +40,38 @@ func main() {
 		if update.Message == nil {
 			continue
 		}
-		switch strings.ToLower(update.Message.Text) {
-		case "/weather":
+		if !update.Message.IsCommand() {
+			continue
+		}
+
+		msg := tgbotapi.NewMessage(update.Message.Chat.ID, "")
+
+		switch update.Message.Command() {
+		case "weather":
 			weatherForecast, err := httpClient.GetWeather(apiKey)
 			if err != nil {
-				log.Fatal(err.Error())
-				return
+				msg.Text = err.Error()
+				msg.ReplyToMessageID = update.Message.MessageID
 			}
-			weather := weatherForecast.Data[0]
-			message := templates.MakeTGWeatherMessage(weather)
-			msg := tgbotapi.NewMessage(update.Message.Chat.ID, message)
+			if weatherForecast.Count < 1 && err == nil {
+				msg.Text = "can't catch forecast"
+				msg.ReplyToMessageID = update.Message.MessageID
+			} else {
+				weather := weatherForecast.Data[0]
+				msg.Text = templates.MakeTGWeatherMessage(weather)
+				msg.ReplyToMessageID = update.Message.MessageID
+			}
+		case "help":
+			msg.Text = "Дарова, я Федя, помощник Ильи\n" +
+				"/weather - информация о погоде\n" +
+				"/help - информация о боте"
 			msg.ReplyToMessageID = update.Message.MessageID
-			if _, err := bot.Send(msg); err != nil {
-				panic(err)
-			}
+		default:
+			msg.Text = "Я вас не понимаю"
+			msg.ReplyToMessageID = update.Message.MessageID
+		}
+		if _, err := bot.Send(msg); err != nil {
+			panic(err)
 		}
 	}
 }
