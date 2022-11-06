@@ -19,7 +19,7 @@ func init() {
 }
 func main() {
 	var (
-		apiKey        = os.Getenv("WEATHER_API_KEY")
+		apiKey        = os.Getenv("RAPID_API_KEY")
 		telegramToken = os.Getenv("TELEGRAM_APITOKEN")
 	)
 	MakkaString, err := decimal.NewFromString(os.Getenv("MAKKA"))
@@ -47,10 +47,27 @@ func main() {
 		}
 
 		msg := tgbotapi.NewMessage(update.Message.Chat.ID, "")
-
 		switch update.Message.Command() {
 		case "weather":
-			weatherForecast, err := httpClient.GetWeather(apiKey)
+			query := update.Message.CommandArguments()
+			if query == "" {
+				query = "Dolgoprudnyy"
+			}
+			cities, err := httpClient.GetCity(apiKey, query)
+			if err != nil {
+				println(err.Error())
+				continue
+			}
+			if len(cities) < 1 {
+				msg.Text = "Не нашел таких городов"
+				msg.ReplyToMessageID = update.Message.MessageID
+				if _, err := bot.Send(msg); err != nil {
+					panic(err)
+				}
+				continue
+			}
+			city := cities[0]
+			weatherForecast, err := httpClient.GetWeather(apiKey, city.Coordinates.Longitude, city.Coordinates.Latitude)
 			if err != nil {
 				msg.Text = err.Error()
 				msg.ReplyToMessageID = update.Message.MessageID
