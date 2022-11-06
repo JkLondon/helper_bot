@@ -58,7 +58,7 @@ func main() {
 			if weatherForecast.Count < 1 && err == nil {
 				msg.Text = "can't catch forecast"
 				msg.ReplyToMessageID = update.Message.MessageID
-			} else {
+			} else if err == nil {
 				weather := weatherForecast.Data[0]
 				msg.Text = templates.MakeTGWeatherMessage(weather)
 				msg.ReplyToMessageID = update.Message.MessageID
