@@ -4,11 +4,11 @@ import (
 	"log"
 	"os"
 	"weatherEveryDay/httpClient"
+	"weatherEveryDay/pkg/utils"
 	"weatherEveryDay/templates"
 
 	tgbotapi "github.com/go-telegram-bot-api/telegram-bot-api/v5"
 	"github.com/joho/godotenv"
-	"github.com/shopspring/decimal"
 )
 
 func init() {
@@ -22,11 +22,19 @@ func main() {
 		apiKey        = os.Getenv("RAPID_API_KEY")
 		telegramToken = os.Getenv("TELEGRAM_APITOKEN")
 	)
-	MakkaString, err := decimal.NewFromString(os.Getenv("MAKKA"))
-	MakkaID := MakkaString.IntPart()
+	MakkaString := os.Getenv("MAKKA_ID")
+	OwnerString := os.Getenv("OWNER_ID")
+	MakkaID, err := utils.StrToInt64(MakkaString)
+	if err != nil {
+		log.Fatal(err)
+	}
+	OwnerID, err := utils.StrToInt64(OwnerString)
+	if err != nil {
+		log.Fatal(err)
+	}
 	bot, err := tgbotapi.NewBotAPI(telegramToken)
 	if err != nil {
-		panic(err)
+		log.Fatal(err)
 	}
 
 	bot.Debug = true
@@ -43,6 +51,10 @@ func main() {
 			continue
 		}
 		if !update.Message.IsCommand() {
+			fwd := tgbotapi.NewForward(OwnerID, update.Message.From.ID, update.Message.MessageID)
+			if _, err := bot.Send(fwd); err != nil {
+				panic(err)
+			}
 			continue
 		}
 
