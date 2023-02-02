@@ -25,8 +25,8 @@ func main() {
 	)
 	MakkaString := os.Getenv("MAKKA_ID")
 	OwnerString := os.Getenv("OWNER_ID")
+	JiraToken := os.Getenv("JIRATOKEN")
 	JiraLogin := os.Getenv("JIRALOGIN")
-	JiraPass := os.Getenv("JIRAPASS")
 	MakkaID, err := utils.StrToInt64(MakkaString)
 	if err != nil {
 		log.Fatal(err)
@@ -107,7 +107,7 @@ func main() {
 			}
 			msg.ReplyToMessageID = update.Message.MessageID
 		case "jira":
-			res, err := httpClient.GetJiraReport(JiraLogin, JiraPass)
+			res, err := httpClient.GetJiraReport(JiraLogin, JiraToken)
 			if err != nil {
 				msg.Text = err.Error()
 			} else {

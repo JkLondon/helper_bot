@@ -48,12 +48,12 @@ func GetCity(
 
 func GetJiraReport(
 	login string,
-	pass string,
+	token string,
 ) (result models.JiraReport, err error) {
 	err = MakeJiraRequest(models.RequestJiraParams{
 		Url:   JiraReq,
 		Login: login,
-		Pass:  pass,
+		Token: token,
 		Dest:  &result,
 	})
 	if err != nil {
@@ -94,7 +94,7 @@ func MakeJiraRequest(params models.RequestJiraParams) (err error) {
 		return err
 	}
 
-	req.SetBasicAuth(params.Login, params.Pass)
+	req.SetBasicAuth(params.Login, params.Token)
 
 	res, err := http.DefaultClient.Do(req)
 	if err != nil {

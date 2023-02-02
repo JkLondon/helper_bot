@@ -10,6 +10,6 @@ type RequestRapidAPIParams struct {
 type RequestJiraParams struct {
 	Url   string
 	Login string
-	Pass  string
+	Token string
 	Dest  interface{}
 }
