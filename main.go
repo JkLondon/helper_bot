@@ -3,6 +3,7 @@ package main
 import (
 	"log"
 	"os"
+	"strconv"
 	"weatherEveryDay/httpClient"
 	"weatherEveryDay/pkg/utils"
 	"weatherEveryDay/templates"
@@ -24,6 +25,8 @@ func main() {
 	)
 	MakkaString := os.Getenv("MAKKA_ID")
 	OwnerString := os.Getenv("OWNER_ID")
+	JiraLogin := os.Getenv("JIRALOGIN")
+	JiraPass := os.Getenv("JIRAPASS")
 	MakkaID, err := utils.StrToInt64(MakkaString)
 	if err != nil {
 		log.Fatal(err)
@@ -103,7 +106,13 @@ func main() {
 				msg.Text += "\nОй, это же вы, Макка!!! Хозяин Илюша просит вам передать, что обожает вас!!❤️"
 			}
 			msg.ReplyToMessageID = update.Message.MessageID
-
+		case "jira":
+			res, err := httpClient.GetJiraReport(JiraLogin, JiraPass)
+			if err != nil {
+				msg.Text = err.Error()
+			} else {
+				msg.Text = strconv.Itoa(res.Total)
+			}
 		default:
 			msg.Text = "Я вас не понимаю"
 			msg.ReplyToMessageID = update.Message.MessageID
