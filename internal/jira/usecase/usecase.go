@@ -44,7 +44,7 @@ func (j *JiraUC) MakeReport(params models.JiraRawData) (result string, err error
 	}
 	result += fmt.Sprintf("Всего задач %d\n", jiraData.TotalIssues)
 	for i, task := range jiraData.Tasks {
-		result += fmt.Sprintf("Задача №%d: %s. На нее назначен %s\n", i, task.Name, task.Assignee)
+		result += fmt.Sprintf("Задача №%d: %s. %s\n", i, task.Name, task.Assignee)
 	}
 	return result, nil
 }
