@@ -113,7 +113,10 @@ func main() {
 			if err != nil {
 				msg.Text = err.Error()
 			} else {
-				msg.Text, _ = juc.MakeReport(res)
+				msg.Text, err = juc.MakeReport(res)
+				if err != nil {
+					panic(err)
+				}
 			}
 		case "start":
 			msg.Text = "Привет, я бот-подсос Илюхи, буду рад вам услужить"
