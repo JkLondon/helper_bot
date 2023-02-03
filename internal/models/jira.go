@@ -267,6 +267,8 @@ type Worker struct {
 
 type JiraData struct {
 	TotalIssues int
+	TotalMonth  int
+	TotalWeek   int
 	Tasks       []Task
 }
 
@@ -276,6 +278,8 @@ type Task struct {
 	Assignees   []string
 	Description string
 	Peredogovor int
+	Status      string
+	DueTo       time.Time
 }
 
 type JiraRawChangelog struct {
