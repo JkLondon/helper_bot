@@ -278,7 +278,7 @@ type JiraData struct {
 
 type Task struct {
 	Name        string
-	Assignees   []string
+	Assignees   map[string]bool
 	Description string
 	Peredogovor int
 	Status      string

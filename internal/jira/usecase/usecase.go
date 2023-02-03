@@ -35,18 +35,18 @@ func (j *JiraUC) ParseRawData(params models.JiraRawData) (result models.JiraData
 
 		task := models.Task{
 			Name:        issue.Fields.Summary,
-			Assignees:   nil,
+			Assignees:   make(map[string]bool),
 			Description: desc,
 			Peredogovor: 0,
 			Status:      issue.Fields.Status.Name,
 		}
 
 		if assignee != "" {
-			task.Assignees = append(task.Assignees, assignee)
+			task.Assignees[assignee] = true
 		}
 
 		for _, mem := range issue.Fields.Workers {
-			task.Assignees = append(task.Assignees, mem.DisplayName)
+			task.Assignees[mem.DisplayName] = true
 		}
 
 		if issue.Fields.Duedate != nil {
@@ -60,13 +60,13 @@ func (j *JiraUC) ParseRawData(params models.JiraRawData) (result models.JiraData
 		if task.Status == "Готово" && issue.Fields.Duedate != nil {
 			if task.DueTo.Add(time.Hour * 24 * 30).After(time.Now()) {
 				result.TotalMonth += 1
-				for _, name := range task.Assignees {
+				for name, _ := range task.Assignees {
 					result.MemberMapTasksDoneMonth[name] += 1
 				}
 			}
 			if task.DueTo.Add(time.Hour * 24 * 7).After(time.Now()) {
 				result.TotalWeek += 1
-				for _, name := range task.Assignees {
+				for name, _ := range task.Assignees {
 					result.MemberMapTasksDoneWeek[name] += 1
 				}
 			}
