@@ -2,7 +2,7 @@ package models
 
 import "time"
 
-type JiraReport struct {
+type JiraRawData struct {
 	Expand     string  `json:"expand"`
 	StartAt    int     `json:"startAt"`
 	MaxResults int     `json:"maxResults"`
@@ -263,4 +263,53 @@ type Worker struct {
 	TimeZone     string `json:"timeZone"`
 	AccountType  string `json:"accountType"`
 	EmailAddress string `json:"emailAddress,omitempty"`
+}
+
+type JiraData struct {
+	TotalIssues int
+	Tasks       []Task
+}
+
+type Task struct {
+	Name        string
+	Assignee    string
+	Assignees   []string
+	Description string
+	Peredogovor int
+}
+
+type JiraRawChangelog struct {
+	Self       string `json:"self"`
+	MaxResults int    `json:"maxResults"`
+	StartAt    int    `json:"startAt"`
+	Total      int    `json:"total"`
+	IsLast     bool   `json:"isLast"`
+	Values     []struct {
+		Id     string `json:"id"`
+		Author struct {
+			Self       string `json:"self"`
+			AccountId  string `json:"accountId"`
+			AvatarUrls struct {
+				X48 string `json:"48x48"`
+				X24 string `json:"24x24"`
+				X16 string `json:"16x16"`
+				X32 string `json:"32x32"`
+			} `json:"avatarUrls"`
+			DisplayName  string `json:"displayName"`
+			Active       bool   `json:"active"`
+			TimeZone     string `json:"timeZone"`
+			AccountType  string `json:"accountType"`
+			EmailAddress string `json:"emailAddress,omitempty"`
+		} `json:"author"`
+		Created string `json:"created"`
+		Items   []struct {
+			Field      string `json:"field"`
+			Fieldtype  string `json:"fieldtype"`
+			FieldId    string `json:"fieldId"`
+			From       string `json:"from"`
+			FromString string `json:"fromString"`
+			To         string `json:"to"`
+			ToString   string `json:"toString"`
+		} `json:"items"`
+	} `json:"values"`
 }

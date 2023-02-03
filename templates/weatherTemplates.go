@@ -2,7 +2,7 @@ package templates
 
 import (
 	"fmt"
-	"weatherEveryDay/models"
+	"weatherEveryDay/internal/models"
 )
 
 const (

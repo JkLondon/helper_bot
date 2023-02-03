@@ -3,10 +3,10 @@ package httpClient
 import (
 	"encoding/json"
 	"fmt"
+	"weatherEveryDay/internal/models"
 
 	"io/ioutil"
 	"net/http"
-	"weatherEveryDay/models"
 
 	"github.com/shopspring/decimal"
 )
@@ -46,12 +46,29 @@ func GetCity(
 	return cities, nil
 }
 
-func GetJiraReport(
+func FetchRawJiraHistory(
 	login string,
 	token string,
-) (result models.JiraReport, err error) {
-	err = MakeJiraRequest(models.RequestJiraParams{
-		Url:   JiraReq,
+) (result models.JiraRawData, err error) {
+	err = FetchJiraData(models.RequestJiraParams{
+		Url:   JiraHistoryRequest,
+		Login: login,
+		Token: token,
+		Dest:  &result,
+	})
+	if err != nil {
+		return result, err
+	}
+	return result, nil
+}
+
+func FetchIssueChangelog(
+	login string,
+	token string,
+	issueID string,
+) (result models.JiraRawChangelog, err error) {
+	err = FetchJiraData(models.RequestJiraParams{
+		Url:   fmt.Sprintf(JiraIssueChangelog, issueID),
 		Login: login,
 		Token: token,
 		Dest:  &result,
@@ -88,7 +105,7 @@ func MakeRapidAPIRequest(params models.RequestRapidAPIParams) (err error) {
 	return nil
 }
 
-func MakeJiraRequest(params models.RequestJiraParams) (err error) {
+func FetchJiraData(params models.RequestJiraParams) (err error) {
 	req, err := http.NewRequest("GET", params.Url, nil)
 	if err != nil {
 		return err

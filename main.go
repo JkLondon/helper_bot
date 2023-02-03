@@ -3,8 +3,8 @@ package main
 import (
 	"log"
 	"os"
-	"strconv"
-	"weatherEveryDay/httpClient"
+	"weatherEveryDay/internal/httpClient"
+	"weatherEveryDay/internal/jira/usecase"
 	"weatherEveryDay/pkg/utils"
 	"weatherEveryDay/templates"
 
@@ -41,6 +41,8 @@ func main() {
 	}
 
 	bot.Debug = true
+
+	juc := usecase.NewJiraUC()
 
 	updateConfig := tgbotapi.NewUpdate(0)
 
@@ -107,12 +109,14 @@ func main() {
 			}
 			msg.ReplyToMessageID = update.Message.MessageID
 		case "jira":
-			res, err := httpClient.GetJiraReport(JiraLogin, JiraToken)
+			res, err := httpClient.FetchRawJiraHistory(JiraLogin, JiraToken)
 			if err != nil {
 				msg.Text = err.Error()
 			} else {
-				msg.Text = strconv.Itoa(res.Total)
+				msg.Text, _ = juc.MakeReport(res)
 			}
+		case "start":
+			msg.Text = "Привет, я бот-подсос Илюхи, буду рад вам услужить"
 		default:
 			msg.Text = "Я вас не понимаю"
 			msg.ReplyToMessageID = update.Message.MessageID
