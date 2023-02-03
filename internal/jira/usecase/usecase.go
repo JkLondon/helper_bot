@@ -64,6 +64,6 @@ func (j *JiraUC) MakeReport(params models.JiraRawData) (result string, err error
 		return err.Error(), err
 	}
 	result += fmt.Sprintf("Всего задач %d\n", jiraData.TotalIssues)
-	result += fmt.Sprintf("За месяц было выполнено %d задач, за неделю - %d\n", jiraData.TotalMonth, jiraData.TotalWeek)
+	result += fmt.Sprintf("За месяц было выполнено %d задач, за неделю — %d\n", jiraData.TotalMonth, jiraData.TotalWeek)
 	return result, nil
 }
