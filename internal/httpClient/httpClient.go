@@ -50,14 +50,30 @@ func FetchRawJiraHistory(
 	login string,
 	token string,
 ) (result models.JiraRawData, err error) {
+	startAt := 0
 	err = FetchJiraData(models.RequestJiraParams{
-		Url:   JiraHistoryRequest,
+		Url:   fmt.Sprintf(JiraHistoryRequest, startAt),
 		Login: login,
 		Token: token,
 		Dest:  &result,
 	})
 	if err != nil {
 		return result, err
+	}
+	startAt += result.MaxResults
+	for startAt < result.Total {
+		tmpRes := models.JiraRawData{}
+		err = FetchJiraData(models.RequestJiraParams{
+			Url:   fmt.Sprintf(JiraHistoryRequest, startAt),
+			Login: login,
+			Token: token,
+			Dest:  &tmpRes,
+		})
+		if err != nil {
+			return result, err
+		}
+		startAt += result.MaxResults
+		result.Issues = append(result.Issues, tmpRes.Issues...)
 	}
 	return result, nil
 }
