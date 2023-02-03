@@ -50,7 +50,7 @@ func (j *JiraUC) ParseRawData(params models.JiraRawData) (result models.JiraData
 				result.TotalMonth += 1
 			}
 			if task.DueTo.Add(time.Hour * 24 * 7).After(time.Now()) {
-				result.TotalMonth += 1
+				result.TotalWeek += 1
 			}
 		}
 		result.Tasks = append(result.Tasks, task)
