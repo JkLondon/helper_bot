@@ -28,8 +28,6 @@ func (j *JiraUC) ParseRawData(params models.JiraRawData) (result models.JiraData
 		if issue.Fields.Assignee != nil {
 			assignee = issue.Fields.Assignee.DisplayName
 		}
-
-		shortForm := "2023-02-02"
 		task := models.Task{
 			Name:        issue.Fields.Summary,
 			Assignee:    assignee,
@@ -38,7 +36,9 @@ func (j *JiraUC) ParseRawData(params models.JiraRawData) (result models.JiraData
 			Peredogovor: 0,
 			Status:      issue.Fields.Status.Name,
 		}
+
 		if issue.Fields.Duedate != nil {
+			shortForm := "2023-02-02"
 			task.DueTo, err = time.Parse(shortForm, *issue.Fields.Duedate)
 			if err != nil {
 				return result, err
