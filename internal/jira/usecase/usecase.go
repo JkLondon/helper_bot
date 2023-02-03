@@ -5,6 +5,7 @@ import (
 	"time"
 	"weatherEveryDay/internal/jira"
 	"weatherEveryDay/internal/models"
+	"weatherEveryDay/templates"
 )
 
 type JiraUC struct {
@@ -81,15 +82,15 @@ func (j *JiraUC) MakeReport(params models.JiraRawData) (result string, err error
 	if err != nil {
 		return err.Error(), err
 	}
-	result += fmt.Sprintf("Всего задач %d\n", jiraData.TotalIssues)
-	result += fmt.Sprintf("За месяц было выполнено %d задач, за неделю — %d\n", jiraData.TotalMonth, jiraData.TotalWeek)
-	result += fmt.Sprintf("За эту неделю %d cотрудников выполнили определенное количество задач, а именно:\n", len(jiraData.MemberMapTasksDoneWeek))
+	result += fmt.Sprintf(templates.AllTask, jiraData.TotalIssues)
+	result += fmt.Sprintf(templates.TaskDoneMonthWeek, jiraData.TotalMonth, jiraData.TotalWeek)
+	result += fmt.Sprintf(templates.WeekMemberActivity, len(jiraData.MemberMapTasksDoneWeek))
 	for key, value := range jiraData.MemberMapTasksDoneWeek {
-		result += fmt.Sprintf("%s выполнил(а) %d задач\n", key, value)
+		result += fmt.Sprintf(templates.MemberReport, key, value)
 	}
-	result += fmt.Sprintf("За этот месяц %d cотрудников выполнили определенное количество задач, а именно:\n", len(jiraData.MemberMapTasksDoneMonth))
+	result += fmt.Sprintf(templates.MonthMemberActivity, len(jiraData.MemberMapTasksDoneMonth))
 	for key, value := range jiraData.MemberMapTasksDoneMonth {
-		result += fmt.Sprintf("%s выполнил(а) %d задач\n", key, value)
+		result += fmt.Sprintf(templates.MemberReport, key, value)
 	}
 	return result, nil
 }
