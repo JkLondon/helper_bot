@@ -38,10 +38,9 @@ func (j *JiraUC) ParseRawData(params models.JiraRawData) (result models.JiraData
 		}
 
 		if issue.Fields.Duedate != nil {
-			shortForm := "2023-02-02"
+			shortForm := "2023-02-03"
 			dueDateStr := *issue.Fields.Duedate
-			fmt.Printf("\nddd %t %t\n", shortForm[4] == dueDateStr[4], shortForm[7] == dueDateStr[7])
-			task.DueTo, err = time.Parse(shortForm, *issue.Fields.Duedate)
+			task.DueTo, err = time.Parse(shortForm, dueDateStr)
 			if err != nil {
 				return result, err
 			}
