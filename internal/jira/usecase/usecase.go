@@ -17,11 +17,19 @@ func (j *JiraUC) ParseRawData(params models.JiraRawData) (result models.JiraData
 	result.TotalIssues = params.Total
 	result.Tasks = make([]models.Task, 0)
 	for _, issue := range params.Issues {
+		desc := ""
+		if issue.Fields.Description != nil {
+			desc = *issue.Fields.Description
+		}
+		assignee := ""
+		if issue.Fields.Assignee != nil {
+			assignee = issue.Fields.Assignee.DisplayName
+		}
 		task := models.Task{
 			Name:        issue.Fields.Summary,
-			Assignee:    issue.Fields.Assignee.DisplayName,
+			Assignee:    assignee,
 			Assignees:   nil,
-			Description: *issue.Fields.Description,
+			Description: desc,
 			Peredogovor: 0,
 		}
 		result.Tasks = append(result.Tasks, task)
