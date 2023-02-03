@@ -67,7 +67,7 @@ func (j *JiraUC) ParseRawData(params models.JiraRawData) (result models.JiraData
 			if task.DueTo.Add(time.Hour * 24 * 7).After(time.Now()) {
 				result.TotalWeek += 1
 				for _, name := range task.Assignees {
-					result.MemberMapTasksDoneWeek[name] += 1
+					result.MemberMapTasksDoneMonth[name] += 1
 				}
 			}
 		}
@@ -87,7 +87,7 @@ func (j *JiraUC) MakeReport(params models.JiraRawData) (result string, err error
 	for key, value := range jiraData.MemberMapTasksDoneWeek {
 		result += fmt.Sprintf("%s выполнил(а) %d задач\n", key, value)
 	}
-	result += fmt.Sprintf("За этот месяц %d cотрудников выполнили определенное количество задач, а именно:\n", len(jiraData.MemberMapTasksDoneWeek))
+	result += fmt.Sprintf("За этот месяц %d cотрудников выполнили определенное количество задач, а именно:\n", len(jiraData.MemberMapTasksDoneMonth))
 	for key, value := range jiraData.MemberMapTasksDoneMonth {
 		result += fmt.Sprintf("%s выполнил(а) %d задач\n", key, value)
 	}
