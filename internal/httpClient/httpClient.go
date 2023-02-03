@@ -135,7 +135,6 @@ func FetchJiraData(params models.RequestJiraParams) (err error) {
 	}
 	defer res.Body.Close()
 	body, err := ioutil.ReadAll(res.Body)
-	println(string(body))
 	if err != nil {
 		return err
 	}
