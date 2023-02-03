@@ -44,7 +44,7 @@ func (j *JiraUC) ParseRawData(params models.JiraRawData) (result models.JiraData
 				return result, err
 			}
 		}
-		if task.Status == "Готово" {
+		if task.Status == "Готово" && issue.Fields.Duedate != nil {
 			if task.DueTo.Add(time.Hour * 24 * 30).After(time.Now()) {
 				result.TotalMonth += 1
 			}
@@ -52,7 +52,6 @@ func (j *JiraUC) ParseRawData(params models.JiraRawData) (result models.JiraData
 				result.TotalMonth += 1
 			}
 		}
-
 		result.Tasks = append(result.Tasks, task)
 	}
 	return result, nil
