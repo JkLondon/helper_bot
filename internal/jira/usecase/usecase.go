@@ -3,6 +3,7 @@ package usecase
 import (
 	"fmt"
 	"time"
+	"weatherEveryDay/internal/httpClient"
 	"weatherEveryDay/internal/jira"
 	"weatherEveryDay/internal/models"
 	"weatherEveryDay/templates"
@@ -42,6 +43,18 @@ func (j *JiraUC) ParseRawData(params models.JiraRawData) (result models.JiraData
 			Status:      issue.Fields.Status.Name,
 		}
 
+		changeLog, err := httpClient.FetchIssueChangelog(params.Login, params.Token, issue.Id)
+		if err != nil {
+			return result, err
+		}
+
+		for _, value := range changeLog.Values {
+			event := value.Items[0]
+			if event.Field == "duedate" && event.From != event.To {
+				task.Peredogovor += 1
+			}
+		}
+
 		if assignee != "" {
 			task.Assignees[assignee] = true
 		}
@@ -63,12 +76,14 @@ func (j *JiraUC) ParseRawData(params models.JiraRawData) (result models.JiraData
 				result.TotalMonth += 1
 				for name, _ := range task.Assignees {
 					result.MemberMapTasksDoneMonth[name] += 1
+					result.MemberMapPeredogovorsMonth[name] += task.Peredogovor
 				}
 			}
 			if task.DueTo.Add(time.Hour * 24 * 7).After(time.Now()) {
 				result.TotalWeek += 1
 				for name, _ := range task.Assignees {
 					result.MemberMapTasksDoneWeek[name] += 1
+					result.MemberMapPeredogovorsWeek[name] += task.Peredogovor
 				}
 			}
 		}
@@ -86,11 +101,11 @@ func (j *JiraUC) MakeReport(params models.JiraRawData) (result string, err error
 	result += fmt.Sprintf(templates.TaskDoneMonthWeek, jiraData.TotalMonth, jiraData.TotalWeek)
 	result += fmt.Sprintf(templates.WeekMemberActivity, len(jiraData.MemberMapTasksDoneWeek))
 	for key, value := range jiraData.MemberMapTasksDoneWeek {
-		result += fmt.Sprintf(templates.MemberReport, key, value)
+		result += fmt.Sprintf(templates.MemberReport, key, value, jiraData.MemberMapPeredogovorsWeek[key])
 	}
 	result += fmt.Sprintf(templates.MonthMemberActivity, len(jiraData.MemberMapTasksDoneMonth))
 	for key, value := range jiraData.MemberMapTasksDoneMonth {
-		result += fmt.Sprintf(templates.MemberReport, key, value)
+		result += fmt.Sprintf(templates.MemberReport, key, value, jiraData.MemberMapPeredogovorsMonth[key])
 	}
 	return result, nil
 }

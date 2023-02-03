@@ -8,6 +8,8 @@ type JiraRawData struct {
 	MaxResults int     `json:"maxResults"`
 	Total      int     `json:"total"`
 	Issues     []Issue `json:"issues"`
+	Login      string
+	Token      string
 }
 
 type Issue struct {

@@ -75,10 +75,13 @@ func FetchRawJiraHistory(
 		startAt += result.MaxResults
 		result.Issues = append(result.Issues, tmpRes.Issues...)
 	}
+	result.Login = login
+	result.Token = token
 	return result, nil
 }
 
 func FetchIssueChangelog(
+	//TODO: implement multirequest for fetch maximum
 	login string,
 	token string,
 	issueID string,
