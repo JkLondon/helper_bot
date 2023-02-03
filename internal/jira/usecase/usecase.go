@@ -28,13 +28,21 @@ func (j *JiraUC) ParseRawData(params models.JiraRawData) (result models.JiraData
 		if issue.Fields.Assignee != nil {
 			assignee = issue.Fields.Assignee.DisplayName
 		}
+
 		task := models.Task{
 			Name:        issue.Fields.Summary,
-			Assignee:    assignee,
 			Assignees:   nil,
 			Description: desc,
 			Peredogovor: 0,
 			Status:      issue.Fields.Status.Name,
+		}
+
+		if assignee != "" {
+			task.Assignees = append(task.Assignees, assignee)
+		}
+
+		for _, mem := range issue.Fields.Workers {
+			task.Assignees = append(task.Assignees, mem.DisplayName)
 		}
 
 		if issue.Fields.Duedate != nil {
@@ -48,9 +56,15 @@ func (j *JiraUC) ParseRawData(params models.JiraRawData) (result models.JiraData
 		if task.Status == "Готово" && issue.Fields.Duedate != nil {
 			if task.DueTo.Add(time.Hour * 24 * 30).After(time.Now()) {
 				result.TotalMonth += 1
+				for _, name := range task.Assignees {
+					result.MemberMapTasksDoneMonth[name] += 1
+				}
 			}
 			if task.DueTo.Add(time.Hour * 24 * 7).After(time.Now()) {
 				result.TotalWeek += 1
+				for _, name := range task.Assignees {
+					result.MemberMapTasksDoneWeek[name] += 1
+				}
 			}
 		}
 		result.Tasks = append(result.Tasks, task)
@@ -65,5 +79,13 @@ func (j *JiraUC) MakeReport(params models.JiraRawData) (result string, err error
 	}
 	result += fmt.Sprintf("Всего задач %d\n", jiraData.TotalIssues)
 	result += fmt.Sprintf("За месяц было выполнено %d задач, за неделю — %d\n", jiraData.TotalMonth, jiraData.TotalWeek)
+	result += fmt.Sprintf("За эту неделю %d cотрудников выполнили определенное количество задач, а именно:\n", len(jiraData.MemberMapTasksDoneWeek))
+	for key, value := range jiraData.MemberMapTasksDoneWeek {
+		result += fmt.Sprintf("%s выполнил(а) %d задач\n", key, value)
+	}
+	result += fmt.Sprintf("За этот месяц %d cотрудников выполнили определенное количество задач, а именно:\n", len(jiraData.MemberMapTasksDoneWeek))
+	for key, value := range jiraData.MemberMapTasksDoneMonth {
+		result += fmt.Sprintf("%s выполнил(а) %d задач\n", key, value)
+	}
 	return result, nil
 }

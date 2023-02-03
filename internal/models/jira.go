@@ -266,15 +266,18 @@ type Worker struct {
 }
 
 type JiraData struct {
-	TotalIssues int
-	TotalMonth  int
-	TotalWeek   int
-	Tasks       []Task
+	TotalIssues                int
+	TotalMonth                 int
+	TotalWeek                  int
+	Tasks                      []Task
+	MemberMapTasksDoneWeek     map[string]int
+	MemberMapPeredogovorsWeek  map[string]int
+	MemberMapTasksDoneMonth    map[string]int
+	MemberMapPeredogovorsMonth map[string]int
 }
 
 type Task struct {
 	Name        string
-	Assignee    string
 	Assignees   []string
 	Description string
 	Peredogovor int
