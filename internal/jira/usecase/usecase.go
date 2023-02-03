@@ -60,7 +60,7 @@ func (j *JiraUC) ParseRawData(params models.JiraRawData) (result models.JiraData
 func (j *JiraUC) MakeReport(params models.JiraRawData) (result string, err error) {
 	jiraData, err := j.ParseRawData(params)
 	if err != nil {
-		return "", err
+		return err.Error(), err
 	}
 	result += fmt.Sprintf("Всего задач %d\n", jiraData.TotalIssues)
 	result += fmt.Sprintf("За месяц было выполнено %d задач, за неделю - %d\n", jiraData.TotalMonth, jiraData.TotalWeek)
