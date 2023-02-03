@@ -57,13 +57,24 @@ func (j *JiraUC) ParseRawData(params models.JiraRawData) (result models.JiraData
 			if task.DueTo.Add(time.Hour * 24 * 30).After(time.Now()) {
 				result.TotalMonth += 1
 				for _, name := range task.Assignees {
-					result.MemberMapTasksDoneMonth[name] += 1
+					_, ok := result.MemberMapTasksDoneMonth[name]
+					if ok {
+						result.MemberMapTasksDoneMonth[name] += 1
+					} else {
+						result.MemberMapTasksDoneMonth[name] = 1
+					}
+
 				}
 			}
 			if task.DueTo.Add(time.Hour * 24 * 7).After(time.Now()) {
 				result.TotalWeek += 1
 				for _, name := range task.Assignees {
-					result.MemberMapTasksDoneWeek[name] += 1
+					_, ok := result.MemberMapTasksDoneWeek[name]
+					if ok {
+						result.MemberMapTasksDoneWeek[name] += 1
+					} else {
+						result.MemberMapTasksDoneWeek[name] = 1
+					}
 				}
 			}
 		}
