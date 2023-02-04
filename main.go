@@ -64,6 +64,7 @@ func main() {
 		}
 
 		msg := tgbotapi.NewMessage(update.Message.Chat.ID, "")
+		msg.ParseMode = tgbotapi.ModeMarkdown
 		switch update.Message.Command() {
 		case "weather":
 			query := update.Message.CommandArguments()
