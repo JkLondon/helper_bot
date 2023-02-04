@@ -7,8 +7,6 @@ import (
 	"weatherEveryDay/internal/jira"
 	"weatherEveryDay/internal/models"
 	"weatherEveryDay/templates"
-
-	tgbotapi "github.com/go-telegram-bot-api/telegram-bot-api/v5"
 )
 
 type JiraUC struct {
@@ -100,7 +98,7 @@ func (j *JiraUC) MakeReport(params models.JiraRawData) (result string, err error
 		return err.Error(), err
 	}
 	result += fmt.Sprintf(templates.ReportIntro, time.Now().Format("02.01.2006"))
-	result += tgbotapi.EscapeText(tgbotapi.ModeMarkdown, fmt.Sprintf(templates.TaskDoneMonthWeek, jiraData.TotalMonth, jiraData.TotalWeek))
+	result += fmt.Sprintf(templates.TaskDoneMonthWeek, jiraData.TotalMonth, jiraData.TotalWeek)
 	result += fmt.Sprintf(templates.WeekMemberActivity, len(jiraData.MemberMapTasksDoneWeek))
 	for key, value := range jiraData.MemberMapTasksDoneWeek {
 		result += fmt.Sprintf(templates.MemberReport, key, value, jiraData.MemberMapPeredogovorsWeek[key])
