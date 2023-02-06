@@ -97,7 +97,7 @@ func (j *JiraUC) MakeReport(params models.JiraRawData) (result string, err error
 	if err != nil {
 		return err.Error(), err
 	}
-	result += fmt.Sprintf(templates.ReportIntro, time.Now().Format("02.01.2006"))
+	result += fmt.Sprintf(templates.ReportIntro, time.Now().Format("02\\.01\\.2006"))
 	result += fmt.Sprintf(templates.TaskDoneMonthWeek, jiraData.TotalMonth, jiraData.TotalWeek)
 	result += fmt.Sprintf(templates.WeekMemberActivity, len(jiraData.MemberMapTasksDoneWeek))
 	for key, value := range jiraData.MemberMapTasksDoneWeek {
