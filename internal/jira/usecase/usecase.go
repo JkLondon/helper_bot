@@ -168,7 +168,8 @@ func (j *JiraUC) ParseRawDataToDailyReport(params models.JiraRawData) (result mo
 				result.FixesApproved += 1
 			}
 		case templates.JiraTask:
-			if issue.Fields.Labels != nil && issue.Fields.Labels[0] == templates.JiraTestLabel {
+			if issue.Fields.Labels != nil && len(issue.Fields.Labels) > 0 &&
+				issue.Fields.Labels[0] == templates.JiraTestLabel {
 				result.TestsAllCount += 1
 				switch issue.Fields.Status.Name {
 				case templates.JiraStatusInProgress:
