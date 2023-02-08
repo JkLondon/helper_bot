@@ -10,6 +10,7 @@ type JiraRawData struct {
 	Issues     []Issue `json:"issues"`
 	Login      string
 	Token      string
+	Tags       string
 }
 
 type Issue struct {

@@ -275,5 +275,6 @@ func (j *JiraUC) MakeDailyReport(params models.JiraRawData) (result string, err 
 		jiraData.ItersDone,
 		jiraData.ItersAllCount,
 	)
+	result += params.Tags
 	return result, nil
 }

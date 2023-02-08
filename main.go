@@ -125,6 +125,7 @@ func main() {
 						msg.Text = err.Error()
 					}
 				case "день":
+					res.Tags = os.Getenv("TAGS")
 					msg.Text, err = juc.MakeDailyReport(res)
 					if err != nil {
 						msg.Text = err.Error()
