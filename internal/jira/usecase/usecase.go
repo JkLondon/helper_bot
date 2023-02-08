@@ -124,7 +124,7 @@ func (j *JiraUC) ParseRawDataToDailyReport(params models.JiraRawData) (result mo
 				return result, err
 			}
 		}
-		dateCreation, err := time.Parse("2006-01-02", issue.Fields.Created)
+		dateCreation, err := time.Parse("2006-01-02T15:04:05.000-0700", issue.Fields.Created)
 		if err != nil {
 			return result, err
 		}
@@ -147,7 +147,7 @@ func (j *JiraUC) ParseRawDataToDailyReport(params models.JiraRawData) (result mo
 					return result, err
 				}
 				for _, value := range changeLog.Values {
-					dateDoneChange, err := time.Parse("2006-01-02", issue.Fields.Created)
+					dateDoneChange, err := time.Parse("2006-01-02T15:04:05.000-0700", issue.Fields.Created)
 					if err != nil {
 						return result, err
 					}
@@ -188,7 +188,7 @@ func (j *JiraUC) ParseRawDataToDailyReport(params models.JiraRawData) (result mo
 						return result, err
 					}
 					for _, value := range changeLog.Values {
-						dateDoneChange, err := time.Parse("2006-01-02", issue.Fields.Created)
+						dateDoneChange, err := time.Parse("2006-01-02T15:04:05.000-0700", issue.Fields.Created)
 						if err != nil {
 							return result, err
 						}
@@ -226,7 +226,7 @@ func (j *JiraUC) ParseRawDataToDailyReport(params models.JiraRawData) (result mo
 					return result, err
 				}
 				for _, value := range changeLog.Values {
-					dateDoneChange, err := time.Parse("2006-01-02", issue.Fields.Created)
+					dateDoneChange, err := time.Parse("2006-01-02T15:04:05.000-0700", issue.Fields.Created)
 					if err != nil {
 						return result, err
 					}
