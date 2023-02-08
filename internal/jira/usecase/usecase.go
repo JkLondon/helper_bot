@@ -112,7 +112,7 @@ func (j *JiraUC) MakeFocusReport(params models.JiraRawData) (result string, err 
 
 func (j *JiraUC) ParseRawDataToDailyReport(params models.JiraRawData) (result models.JiraDailyData, err error) {
 	for _, issue := range params.Issues {
-		if issue.Fields.Customfield10020[0].State != "active" {
+		if issue.Fields.Customfield10020 == nil || issue.Fields.Customfield10020[0].State != "active" {
 			continue
 		}
 		dueTo := time.Time{}
