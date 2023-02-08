@@ -110,11 +110,27 @@ func main() {
 			}
 			msg.ReplyToMessageID = update.Message.MessageID
 		case "jira":
+			query := update.Message.CommandArguments()
+			if query == "" {
+				query = "фокус"
+			}
 			res, err := httpClient.FetchRawJiraHistory(JiraLogin, JiraToken)
 			if err != nil {
 				msg.Text = err.Error()
 			} else {
-				msg.Text, _ = juc.MakeReport(res)
+				switch query {
+				case "фокус":
+					msg.Text, err = juc.MakeFocusReport(res)
+					if err != nil {
+						msg.Text = err.Error()
+					}
+				case "день":
+					msg.Text, err = juc.MakeDailyReport(res)
+					if err != nil {
+						msg.Text = err.Error()
+					}
+				}
+
 			}
 		case "start":
 			msg.Text = "Привет, я бот-подсос Илюхи, буду рад вам услужить"

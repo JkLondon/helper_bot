@@ -267,7 +267,7 @@ type Worker struct {
 	EmailAddress string `json:"emailAddress,omitempty"`
 }
 
-type JiraData struct {
+type JiraFocusData struct {
 	TotalIssues                int
 	TotalMonth                 int
 	TotalWeek                  int
@@ -276,6 +276,32 @@ type JiraData struct {
 	MemberMapPeredogovorsWeek  map[string]int
 	MemberMapTasksDoneMonth    map[string]int
 	MemberMapPeredogovorsMonth map[string]int
+}
+
+type JiraDailyData struct {
+	FixesDLToday            int
+	FixesInProgress         int
+	FixesNewFromYesteraday  int
+	FixesToComplete         int
+	FixesDoneTodayYesterday int
+	FixesDone               int
+	FixesApproved           int
+	FixesAllCount           int
+
+	TestsDLToday            int
+	TestsInProgress         int
+	TestsToComplete         int
+	TestsDoneTodayYesterday int
+	TestsDone               int
+	TestsAllCount           int
+
+	ItersDLToday            int
+	ItersInProgress         int
+	ItersToComplete         int
+	ItersToCheck            int
+	ItersDoneTodayYesterday int
+	ItersDone               int
+	ItersAllCount           int
 }
 
 type Task struct {
