@@ -64,7 +64,7 @@ func main() {
 		}
 
 		msg := tgbotapi.NewMessage(update.Message.Chat.ID, "")
-		msg.ParseMode = tgbotapi.ModeMarkdownV2
+		msg.ParseMode = tgbotapi.ModeMarkdown
 		switch update.Message.Command() {
 		case "weather":
 			query := update.Message.CommandArguments()
@@ -110,6 +110,7 @@ func main() {
 			}
 			msg.ReplyToMessageID = update.Message.MessageID
 		case "jira":
+			msg.ParseMode = tgbotapi.ModeMarkdownV2
 			query := update.Message.CommandArguments()
 			if query == "" {
 				query = "фокус"
