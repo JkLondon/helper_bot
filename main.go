@@ -56,10 +56,6 @@ func main() {
 			continue
 		}
 		if !update.Message.IsCommand() {
-			fwd := tgbotapi.NewForward(OwnerID, update.Message.From.ID, update.Message.MessageID)
-			if _, err := bot.Send(fwd); err != nil {
-				panic(err)
-			}
 			continue
 		}
 
