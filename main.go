@@ -31,10 +31,6 @@ func main() {
 	if err != nil {
 		log.Fatal(err)
 	}
-	OwnerID, err := utils.StrToInt64(OwnerString)
-	if err != nil {
-		log.Fatal(err)
-	}
 	bot, err := tgbotapi.NewBotAPI(telegramToken)
 	if err != nil {
 		log.Fatal(err)
