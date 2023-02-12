@@ -24,7 +24,6 @@ func main() {
 		telegramToken = os.Getenv("TELEGRAM_APITOKEN")
 	)
 	MakkaString := os.Getenv("MAKKA_ID")
-	OwnerString := os.Getenv("OWNER_ID")
 	JiraToken := os.Getenv("JIRATOKEN")
 	JiraLogin := os.Getenv("JIRALOGIN")
 	MakkaID, err := utils.StrToInt64(MakkaString)
