@@ -5,6 +5,8 @@ import (
 )
 
 type UseCase interface {
-	ParseRawData(params models.JiraRawData) (result models.JiraData, err error)
-	MakeReport(params models.JiraRawData) (result string, err error)
+	ParseRawDataToFocusReport(params models.JiraRawData) (result models.JiraFocusData, err error)
+	MakeFocusReport(params models.JiraRawData) (result string, err error)
+	ParseRawDataToDailyReport(params models.JiraRawData) (result models.JiraDailyData, err error)
+	MakeDailyReport(params models.JiraRawData) (result string, err error)
 }
