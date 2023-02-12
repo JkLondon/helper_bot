@@ -2,6 +2,7 @@ package usecase
 
 import (
 	"fmt"
+	"strings"
 	"time"
 	"weatherEveryDay/internal/httpClient"
 	"weatherEveryDay/internal/jira"
@@ -32,7 +33,7 @@ func (j *JiraUC) ParseRawDataToFocusReport(params models.JiraRawData) (result mo
 		}
 		assignee := ""
 		if issue.Fields.Assignee != nil {
-			assignee = issue.Fields.Assignee.DisplayName
+			assignee = strings.ReplaceAll(issue.Fields.Assignee.DisplayName, ".", "\\.")
 		}
 
 		task := models.Task{
