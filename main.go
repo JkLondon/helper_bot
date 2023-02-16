@@ -102,7 +102,7 @@ func main() {
 				msg.Text += "\nОй, это же вы, Макка!!! Хозяин Илюша просит вам передать, что обожает вас!!❤️"
 			}
 			msg.ReplyToMessageID = update.Message.MessageID
-		case "jiraDaily":
+		case "jira_daily":
 			msg.ParseMode = tgbotapi.ModeMarkdownV2
 			res, err := httpClient.FetchRawJiraHistory(JiraLogin, JiraToken)
 			if err != nil {
@@ -114,7 +114,7 @@ func main() {
 					msg.Text = err.Error()
 				}
 			}
-		case "jiraFocus":
+		case "jira_focus":
 			msg.ParseMode = tgbotapi.ModeMarkdownV2
 			res, err := httpClient.FetchRawJiraHistory(JiraLogin, JiraToken)
 			if err != nil {
