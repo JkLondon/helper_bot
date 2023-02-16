@@ -93,8 +93,8 @@ func main() {
 			msg.Text = "Дарова, я Федя, помощник Ильи\n" +
 				"/weather - информация о погоде\n" +
 				"/help - информация о боте\n" +
-				"/jira фокус (или /jira) - инфа о выполненных задачах и передоговорах\n" +
-				"/jira день - ежедневный отчет по джире "
+				"/jiraFocus - инфа о выполненных задачах и передоговорах\n" +
+				"/jiraDaily - ежедневный отчет по джире "
 			msg.ReplyToMessageID = update.Message.MessageID
 		case "makka":
 			msg.Text = "Макка — девушка моего хозяина, он просил ей передать, что любит её"
@@ -102,30 +102,28 @@ func main() {
 				msg.Text += "\nОй, это же вы, Макка!!! Хозяин Илюша просит вам передать, что обожает вас!!❤️"
 			}
 			msg.ReplyToMessageID = update.Message.MessageID
-		case "jira":
+		case "jiraDaily":
 			msg.ParseMode = tgbotapi.ModeMarkdownV2
-			query := update.Message.CommandArguments()
-			if query == "" {
-				query = "фокус"
-			}
 			res, err := httpClient.FetchRawJiraHistory(JiraLogin, JiraToken)
 			if err != nil {
 				msg.Text = err.Error()
 			} else {
-				switch query {
-				case "фокус":
-					msg.Text, err = juc.MakeFocusReport(res)
-					if err != nil {
-						msg.Text = err.Error()
-					}
-				case "день":
-					res.Tags = os.Getenv("TAGS")
-					msg.Text, err = juc.MakeDailyReport(res)
-					if err != nil {
-						msg.Text = err.Error()
-					}
+				res.Tags = os.Getenv("TAGS")
+				msg.Text, err = juc.MakeDailyReport(res)
+				if err != nil {
+					msg.Text = err.Error()
 				}
-
+			}
+		case "jiraFocus":
+			msg.ParseMode = tgbotapi.ModeMarkdownV2
+			res, err := httpClient.FetchRawJiraHistory(JiraLogin, JiraToken)
+			if err != nil {
+				msg.Text = err.Error()
+			} else {
+				msg.Text, err = juc.MakeFocusReport(res)
+				if err != nil {
+					msg.Text = err.Error()
+				}
 			}
 		case "start":
 			msg.Text = "Привет, я бот-подсос Илюхи, буду рад вам услужить"

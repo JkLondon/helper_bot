@@ -61,6 +61,7 @@ func (j *JiraUC) ParseRawDataToFocusReport(params models.JiraRawData) (result mo
 		}
 
 		for _, mem := range issue.Fields.Workers {
+			assignee = strings.ReplaceAll(mem.DisplayName, ".", "\\.")
 			task.Assignees[mem.DisplayName] = true
 		}
 
